@@ -10,6 +10,7 @@ const hyphenateRE = /\B([A-Z])/g
 const hyphenate = (str: string) => str.replace(hyphenateRE, '-$1').toLowerCase()
 
 const singlelineCommentRE = /\/\/.*$/gm
+// eslint-disable-next-line unicorn/better-regex
 const multilineCommentRE = /\/\*(.|[\r\n])*?\*\//gm
 const stripComments = (statement: string) => {
   return statement
