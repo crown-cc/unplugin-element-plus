@@ -9,6 +9,14 @@ type FormatType = 'cjs' | 'esm'
 const hyphenateRE = /\B([A-Z])/g
 const hyphenate = (str: string) => str.replace(hyphenateRE, '-$1').toLowerCase()
 
+const singlelineCommentRE = /\/\/.*$/gm
+const multilineCommentRE = /\/\*(.|[\r\n])*?\*\//gm
+const stripComments = (statement: string) => {
+  return statement
+    .replace(singlelineCommentRE, '')
+    .replace(multilineCommentRE, '')
+}
+
 const formatMap = {
   cjs: 'lib',
   esm: 'es',
@@ -25,7 +33,8 @@ export const transformImportStyle = (
   }
 ) => {
   const { prefix, lib, format } = options
-  const statement = source.slice(specifier.ss, specifier.se)
+  let statement = source.slice(specifier.ss, specifier.se)
+  statement = stripComments(statement)
   const leftBracket = statement.indexOf('{')
   if (leftBracket > -1) {
     // remove { } to get raw imported items. Maybe this will fail since there could be
